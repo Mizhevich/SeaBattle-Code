@@ -1,4 +1,4 @@
-﻿#include <iostream> 
+include <iostream> 
 #include<string> 
 #include<math.h> 
 #include<stack> 
@@ -6,8 +6,12 @@
 #include<iterator> 
 #include<vector> 
 #include<fstream> 
-#include<windows.h> 
+#include <ctime>
+#include<windows.h>
+#include<time.h>
+
 using namespace std;
+
 void rand_generation(char mas[10][10], int size/*размер корабля*/, int num_ship/*колличество кораблей*/) {
 
     int x, y;
@@ -27,7 +31,7 @@ void rand_generation(char mas[10][10], int size/*размер корабля*/, 
         dir = rand() % 4;
         bool set = 1;
         for (int i = 0; i < size; i++) {
-            if (x < 0  || y < 0 || x >= 10 || y >= 10) {
+            if (x < 0 || y < 0 || x >= 10 || y >= 10) {
                 set = 0; break;
             }
             if (mas[x][y] == '#' ||
@@ -231,8 +235,8 @@ void f() {
     string j;
     ofstream b;
     b.open("W:\\file1.txt");
-    
-         
+
+
     b << "\t\t\t\t\t\tHello People";
     b.close();
     ifstream j1;
@@ -246,11 +250,11 @@ void f() {
 
     cout << "\t\t\t\t\t\tRules!!!" << endl;
     cout << "Принцип «Морского боя» очень прост — вы расставляете свои корабли на поле 10х10, оппонент расставляет свои. Далее вы по очереди делаете «выстрелы», называя те или иные координаты поля — и оппонент отвечает на каждый «выстрел» словами «попал», «промахнулся» или «потопил»." << endl;
-    
+
     while (getline(a, j)) {
         cout << j << endl;
     }
-  
+
 }
 void zv(int x, int y, SeaBattle& BOT, SeaBattle& Obj) {
     BOT.map[x][y] = '&';
@@ -378,8 +382,8 @@ bool check(int x, int y, SeaBattle& BOT, SeaBattle& Obj) {
                 BOT.map[x - 2][y] = '&';
                 if (BOT.map[x - 3][y] == '!' && x - 3 >= 0) {
 
-                   
-                        BOT.map[x - 3][y] = '&';
+
+                    BOT.map[x - 3][y] = '&';
                 }
             }
         }
@@ -459,6 +463,46 @@ int povtor(SeaBattle& Obj, SeaBattle& BOT) {
     }
     return 0;
 }
+int povtor2(SeaBattle& Obj, SeaBattle& BOT) {
+    system("cls");
+    cout << "Вашe поле(" << Obj.name << ")" << endl;
+    Obj.Show();
+    cout << "Информация о поле вашего врага(" << Obj.name << ")" << endl;
+    Obj.ShowInformationOfVrag();
+    int x1; char y1;
+    int c1;
+    x1 = rand() % 10 + 1;
+    c1 = 65 + rand() % 10;
+    y1 = c1;
+    cout << "Введите координату(букву) : "; cout << char(y1); cout << endl;
+    cout << "Введите координату(цифру) : "; x1; cout << x1; cout << endl;
+    if (BOT.map[x1 - 1][h(y1)] == '#') {
+        BOT.map[x1 - 1][h(y1)] = '!';
+        Obj.map2[x1 - 1][h(y1)] = '!';
+        if (check(x1 - 1, h(y1), BOT, Obj)) {
+            zamena(BOT, Obj);
+            cout << "Корабль убит!" << endl;
+        }
+        else if (!check(x1 - 1, h(y1), BOT, Obj)) {
+            cout << "Корабль ранен" << endl;
+        }
+        if (!Nalichie_ship(BOT)) {
+            cout << "Выйграл человек" << endl;
+            return 0;
+        }
+        povtor(Obj, BOT);
+    }
+    else if (BOT.map[x1 - 1][h(y1)] == '!' ||
+        BOT.map[x1 - 1][h(y1)] == '*') {
+        povtor(Obj, BOT);
+    }
+    else if (BOT.map[x1 - 1][h(y1)] == '0') {
+        cout << "Вы промазали" << endl;
+        BOT.map[x1 - 1][h(y1)] = '*';
+        Obj.map2[x1 - 1][h(y1)] = '*';
+    }
+    return 0;
+}
 int tmain(SeaBattle& Obj, SeaBattle& Obj2) {
     int x; char y;
     while (true) {
@@ -500,7 +544,7 @@ int tmain(SeaBattle& Obj, SeaBattle& Obj2) {
         cout << Obj.name << ", отойди не подсматривай, сейчас будет ходить " << Obj2.name << endl;
         system("pause");
         system("cls");
-        
+
 
         cout << "Ходит " << Obj2.name << endl;
         cout << "Ваша поле" << endl;
@@ -539,7 +583,95 @@ int tmain(SeaBattle& Obj, SeaBattle& Obj2) {
         cout << Obj2.name << ", отойди не подсматривай, сейчас будет ходить " << Obj.name << endl;
         system("pause");
         system("cls");
-       
+
+    }
+}
+int bmain(SeaBattle& Obj, SeaBattle& Obj2) {
+    int x; char y;
+    int x1; char y1;
+    int c1;
+    while (true) {
+        srand(time(NULL));
+        cout << "Ходит " << Obj.name << endl;
+        cout << "Вашe поле" << endl;
+        Obj.Show();
+        cout << "Информация о поле вашего врага" << endl;
+        Obj.ShowInformationOfVrag();
+        cout << "Введите координату(букву) : "; cin >> y; cout << endl;
+        cout << "Введите координату(цифру) : "; cin >> x; cout << endl;
+        if (Obj2.map[x - 1][h(y)] == '#') {
+            Obj2.map[x - 1][h(y)] = '!';
+            Obj.map2[x - 1][h(y)] = '!';
+            if (check(x - 1, h(y), Obj2, Obj)) {
+                zamena(Obj2, Obj);
+                cout << "Корабль убит!" << endl;
+            }
+            else if (!check(x - 1, h(y), Obj2, Obj)) {
+                cout << "Корабль ранен" << endl;
+            }
+            if (!Nalichie_ship(Obj2)) {
+                system("cls");
+
+                cout << "\t\t\t\tВЫЙГРАЛ " << Obj.name << endl;
+                return 0;
+            }
+            Sleep(3000);
+            povtor(Obj, Obj2);
+        }
+        else if (Obj2.map[x - 1][h(y)] == '!' || Obj2.map[x - 1][h(y)] == '*') {
+            povtor(Obj, Obj2);
+        }
+        else if (Obj2.map[x - 1][h(y)] == '0') {
+            cout << "Вы промазали" << endl;
+            Obj2.map[x - 1][h(y)] = '*';
+            Obj.map2[x - 1][h(y)] = '*';
+        }
+        cout << Obj.name << ", отойди не подсматривай, сейчас будет ходить " << Obj2.name << endl;
+        system("pause");
+        system("cls");
+        x1 = rand() % 10 + 1;
+        c1 = 65 + rand() % 10;
+        y1 = c1;
+
+
+        cout << "Ходит Bot" << endl;
+        cout << "Ваша поле" << endl;
+        Obj2.Show();
+        cout << "Информация о поле вашего врага" << endl;
+        Obj2.ShowInformationOfVrag();
+        cout << "Введите координату(букву) : "; cout << char(y1); cout << endl;
+        cout << "Введите координату(цифру) : "; x1; cout << x1; cout << endl;
+        if (Obj.map[x1 - 1][h(y1)] == '#') {
+            Obj.map[x1 - 1][h(y1)] = '!';
+            Obj2.map2[x1 - 1][h(y1)] = '!';
+            if (check(x1 - 1, h(y1), Obj, Obj2)) {
+                zamena(Obj2, Obj);
+                cout << "Корабль убит!" << endl;
+            }
+            else if (!check(x1 - 1, h(y1), Obj2, Obj)) {
+                cout << "Корабль ранен" << endl;
+            }
+            if (!Nalichie_ship(Obj)) {
+                system("cls");
+
+                cout << "\t\t\t\tВЫЙГРАЛ " << Obj2.name << endl;
+
+                return 0;
+            }
+            povtor2(Obj2, Obj);
+        }
+        else if (Obj.map[x1 - 1][h(y1)] == '!' || Obj.map[x1 - 1][h(y1)] == '*') {
+            povtor2(Obj2, Obj);
+        }
+        else if (Obj.map[x1 - 1][h(y1)] == '0') {
+            cout << "Вы промазали" << endl;
+            Obj.map[x1 - 1][h(y1)] = '*';
+            Obj2.map2[x1 - 1][h(y1)] = '*';
+        }
+        cout << Obj2.name << ", отойди не подсматривай, сейчас будет ходить " << Obj.name << endl;
+        system("pause");
+        system("cls");
+
     }
 }
 void main()
@@ -547,6 +679,7 @@ void main()
     setlocale(LC_ALL, "ru");
     srand(time(NULL));
     int k;
+    int h;
     f();
     SeaBattle Obj(1);
     SeaBattle Obj2(1);
@@ -563,8 +696,9 @@ void main()
     a3.initialization(Obj2);
     a4.initialization(Obj2);
     Obj2 = Obj;
-    cout << "Хотите ли вы начать игру?(1-Da,2- No)" << endl;
+    cout << "Хотите ли вы начать игру с другом?(1-Da,2- No)" << endl;
     cin >> k;
+
     if (k == 1) {
         cout << "В ИГРЕ УЧАВСТВУЕТ " << Obj2.value << " ИГРОКA" << endl;
         cout << "Напишите имя первого игрока : "; cin >> Obj.name; cout << endl;
@@ -580,7 +714,24 @@ void main()
     }
     else if (k == 2) {
         cout << "Ну ладно, приходите еще!" << endl;
-        exit(0);
+        cout << "Может хотите вы начать игру с ботом?(1-Da,2- No)" << endl;
+        cin >> h;
+        if (h == 1) {
+            cout << "В ИГРЕ УЧАВСТВУЕТ " << Obj2.value << " ИГРОКA" << endl;
+            cout << "Напишите имя первого игрока : "; cin >> Obj.name; cout << endl;
+            cout << "Напишите имя второго игрока :  Bot"; cout << endl;
+            cout << "Первый ";
+            int RAND = rand() % 10;
+            if (RAND < 10) {
+                bmain(Obj, Obj2);
+            }
+            else {
+                bmain(Obj2, Obj);
+            }
+        }
+        else if (h == 2) {
+            cout << "Ну ладно, приходите еще!" << endl;
+            exit(0);
+        }
     }
-    
-}
+    }
